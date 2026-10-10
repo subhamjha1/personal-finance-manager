@@ -1,0 +1,37 @@
+# Render Blueprint: web service (Docker) + managed PostgreSQL.
+# NOTE: Render's free PostgreSQL instances expire after a limited period; see README "Deployment".
+services:
+  - type: web
+    name: personal-finance-manager
+    runtime: docker
+    plan: free
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: DB_HOST
+        fromDatabase:
+          name: pfm-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: pfm-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: pfm-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: pfm-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: pfm-db
+          property: password
+
+databases:
+  - name: pfm-db
+    plan: free
+    databaseName: pfm
+    user: pfm
